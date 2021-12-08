@@ -1,7 +1,5 @@
 package day3BinaryDiagnostic;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,6 +8,11 @@ public class ProcessBinaryInput {
 
     private ArrayList<String> puzzleInputs = new ArrayList<>();
     private BufferedReader br = null;
+    private Integer zero = 0;
+    private Integer one = 0;
+    private Integer numberOfCharacters = 0;
+    private StringBuilder gamma = new StringBuilder("");
+    private StringBuilder epsilon = new StringBuilder("");
 
 
     public void puzzleInputsToArryaListString(BufferedReader br) throws IOException {
@@ -27,33 +30,37 @@ public class ProcessBinaryInput {
 
     public void createResult(){
         Integer inputLenght = puzzleInputs.get(0).length();
-        Integer i = 0;
-        StringBuilder gamma = new StringBuilder("");
-        StringBuilder epsilon = new StringBuilder("");
-            while(i < inputLenght) {
-                Integer zero = 0;
-                Integer one = 0;
-
+            while(getNumberOfCharacters() < inputLenght) {
+                setOne(0);
+                setZero(0);
                 for (String input : puzzleInputs) {
-                    if (input.charAt(i) == '0') {
-                        zero++;
-                    } else {
-                        one++;
-                    }
+                    compareBits(getNumberOfCharacters(), input);
                 }
-                System.out.println("Column: " + i + " Zero: " + zero + "-- One: " + one);
-                if(zero>one){
-                    gamma.append("0");
-                    epsilon.append("1");
-                }else{
-                    gamma.append("1");
-                    epsilon.append("0");
-                }
-                i++;
+                showColumnsInformation();
+
+                constructRate(getZero(), getOne());
+                sumI();
             }
+        showResultInformation();
+
+    }
+
+    private void showColumnsInformation() {
+        System.out.println("Column: " + getNumberOfCharacters() + " Zero: " + getZero() + "-- One: " + getOne());
+    }
+
+    private void showResultInformation() {
         System.out.println("Gamma: " + gamma + " : " + Integer.parseInt(String.valueOf(gamma),2));
         System.out.println("Epsilon: " + epsilon + " : " + Integer.parseInt(String.valueOf(epsilon),2));
         System.out.println("Result: " + (Integer.parseInt(String.valueOf(gamma),2) * Integer.parseInt(String.valueOf(epsilon),2)));
+    }
+
+    public void compareBits(Integer i, String input){
+            if (input.charAt(i) == '0') {
+                sumZero();
+            } else {
+                sumOne();
+            }
 
     }
 
@@ -62,4 +69,51 @@ public class ProcessBinaryInput {
             System.out.println(input);
         }
     }
+
+    public void constructRate(Integer zero, Integer one){
+        if(zero > one){
+            addCharToString(gamma, "0");
+            addCharToString(epsilon, "1");
+        }else{
+            addCharToString(gamma, "1");
+            addCharToString(epsilon, "0");
+        }
+    }
+
+    public void addCharToString(StringBuilder rateString, String charBit){
+        rateString.append(charBit);
+    }
+
+    public Integer getZero() {
+        return zero;
+    }
+
+    public void setZero(Integer zero) {
+        this.zero = zero;
+    }
+
+    public void sumZero(){
+        this.zero++;
+    }
+
+    public void sumOne(){
+        this.one++;
+    }
+
+    public void sumI(){
+        this.numberOfCharacters++;
+    }
+
+    public Integer getOne() {
+        return one;
+    }
+
+    public void setOne(Integer one) {
+        this.one = one;
+    }
+
+    public Integer getNumberOfCharacters() {
+        return numberOfCharacters;
+    }
+
 }
