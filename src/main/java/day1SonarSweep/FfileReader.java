@@ -77,6 +77,9 @@ public class FfileReader {
         }
     }
 
+    public BufferedReader getBr() {
+        return br;
+    }
 
     public ArrayList<Integer> getPuzzleInputs() {
         return puzzleInputs;

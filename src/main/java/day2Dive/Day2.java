@@ -1,8 +1,6 @@
 package day2Dive;
 
 import day1SonarSweep.FfileReader;
-import day1SonarSweep.MeasuramentCount;
-import day1SonarSweep.SumMessurement;
 
 import java.io.FileNotFoundException;
 
