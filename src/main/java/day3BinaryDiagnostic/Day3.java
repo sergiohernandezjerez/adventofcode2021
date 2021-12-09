@@ -21,8 +21,9 @@ public class Day3 {
             }
             //processBinaryInput.showInputs();
             //processBinaryInput.createResult();
-            processBinaryInputSecond.createOxygenGeneratorRating();
-            processBinaryInputSecond.createCO2ScrubberRating();
+            processBinaryInputSecond.createRating(processBinaryInputSecond.getOxigenGeneratorRating(), "oxygen");
+            processBinaryInputSecond.createRating(processBinaryInputSecond.getCO2ScrubberRating(), "co2");
+            processBinaryInputSecond.showResultInformation();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

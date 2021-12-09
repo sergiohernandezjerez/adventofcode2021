@@ -6,22 +6,20 @@ import java.util.ArrayList;
 
 public class ProcessBinaryInputSecond {
 
-    private ArrayList<String> puzzleInputs = new ArrayList<>();
-    private ArrayList<String> puzzleInputs1 = new ArrayList<>();
+    private ArrayList<String> oxigenGeneratorRating = new ArrayList<>();
+    private ArrayList<String> CO2ScrubberRating = new ArrayList<>();
     private BufferedReader br = null;
     private Integer zero = 0;
     private Integer one = 0;
     private Integer numberOfCharacters = 0;
-    private StringBuilder gamma = new StringBuilder("");
-    private StringBuilder epsilon = new StringBuilder("");
 
 
     public void puzzleInputsToArryaListString(BufferedReader br) throws IOException {
         String linea;
         try {
             while((linea = (br.readLine())) != null){
-                puzzleInputs.add(linea);
-                puzzleInputs1.add(linea);
+                oxigenGeneratorRating.add(linea);
+                CO2ScrubberRating.add(linea);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -30,46 +28,28 @@ public class ProcessBinaryInputSecond {
         }
     }
 
-    public void createOxygenGeneratorRating(){
-        Integer inputLenght = puzzleInputs.get(0).length();
+    public void createRating(ArrayList<String> inputs, String ratingMode){
+        Integer inputLenght = inputs.get(0).length();
+
+        resetNumberOfCharacters();
+
             while(getNumberOfCharacters() < inputLenght) {
                 setOne(0);
                 setZero(0);
-                for (String input : puzzleInputs) {
+                for (String input : inputs) {
                     compareBits(getNumberOfCharacters(), input);
                 }
-                showColumnsInformation();
 
-                constructRate(getZero(), getOne(), numberOfCharacters);
+                constructRate(getZero(), getOne(), numberOfCharacters, inputs, ratingMode);
                 sumI();
             }
-        showResultInformation(puzzleInputs);
     }
 
-    public void createCO2ScrubberRating(){
-        Integer inputLenght = puzzleInputs1.get(0).length();
-        resetNumberOfCharacters();
-        while(getNumberOfCharacters() < inputLenght) {
-            setOne(0);
-            setZero(0);
-            for (String input : puzzleInputs1) {
-                compareBits(getNumberOfCharacters(), input);
-            }
-            showColumnsInformation();
-            constructRateCO2(getZero(), getOne(), numberOfCharacters);
-            sumI();
-        }
-        showResultInformation(puzzleInputs1);
+    public void showResultInformation() {
+        Integer oxigenRating = Integer.parseInt(String.valueOf(oxigenGeneratorRating.get(0)),2);
+        Integer co2Rating = Integer.parseInt(String.valueOf(CO2ScrubberRating.get(0)),2);
 
-    }
-
-    private void showColumnsInformation() {
-        System.out.println("Column: " + getNumberOfCharacters() + " Zero: " + getZero() + "-- One: " + getOne());
-    }
-
-    private void showResultInformation(ArrayList<String> inputsToShow) {
-        System.out.println(inputsToShow);
-        System.out.println("Result: " + (Integer.parseInt(String.valueOf(puzzleInputs.get(0)),2) * Integer.parseInt(String.valueOf(puzzleInputs1.get(0)),2)));
+        System.out.println("Result: " + oxigenRating * co2Rating);
 
     }
 
@@ -79,64 +59,50 @@ public class ProcessBinaryInputSecond {
             } else {
                 sumOne();
             }
-
     }
 
-    public void regenerateInputs(String bitToSave, Integer position){
+    public void regenerateInputs(String bitToSave, Integer position, ArrayList<String> inputsArray){
         ArrayList<String> newInputs = new ArrayList<>();
-        for (String inputs:puzzleInputs) {
+        for (String inputs: inputsArray) {
             if(String.valueOf(inputs.charAt(position)).equals(bitToSave)){
                 newInputs.add(inputs);
             }
         }
-        puzzleInputs.clear();
-        puzzleInputs.addAll(newInputs);
+        inputsArray.clear();
+        inputsArray.addAll(newInputs);
     }
 
-    public void regenerateInputs1(String bitToSave, Integer position){
-        ArrayList<String> newInputs1 = new ArrayList<>();
-        for (String inputs:puzzleInputs1) {
-            if(String.valueOf(inputs.charAt(position)).equals(bitToSave)){
-                newInputs1.add(inputs);
+    public void constructRate(Integer zero, Integer one, Integer position, ArrayList<String> inputs, String ratingMode){
+        if(inputs.size() > 1){
+            switch (ratingMode){
+                case "oxygen":
+                    constructRateOxigen(zero, one, position, inputs);
+                    break;
+                case "co2":
+                    constructRateCO2(zero, one, position, inputs);
+                    break;
             }
         }
-        puzzleInputs1.clear();
-        puzzleInputs1.addAll(newInputs1);
     }
 
-    public void showInputs(){
-        for(String input:puzzleInputs){
-            System.out.println(input);
+    public void constructRateOxigen(Integer zero, Integer one, Integer position, ArrayList<String> inputs){
+        if(zero > one){
+            regenerateInputs("0", position,inputs);
+        }else if(zero == one){
+            regenerateInputs("1", position, inputs);
+        }else{
+            regenerateInputs("1", position, inputs);
         }
     }
 
-    public void constructRate(Integer zero, Integer one, Integer position){
-        if(puzzleInputs.size() > 1){
+    public void constructRateCO2(Integer zero, Integer one, Integer position, ArrayList<String> inputs){
             if(zero > one){
-                regenerateInputs("0", position);
+                regenerateInputs("1", position, inputs);
             }else if(zero == one){
-                regenerateInputs("1", position);
+                regenerateInputs("0", position, inputs);
             }else{
-                regenerateInputs("1", position);
+                regenerateInputs("0", position, inputs);
             }
-        }
-    }
-
-    public void constructRateCO2(Integer zero, Integer one, Integer position){
-        if(puzzleInputs1.size() > 1){
-            if(zero > one){
-                regenerateInputs1("1", position);
-            }else if(zero == one){
-                regenerateInputs1("0", position);
-            }else{
-                regenerateInputs1("0", position);
-            }
-        }
-
-    }
-
-    public void addCharToString(StringBuilder rateString, String charBit){
-        rateString.append(charBit);
     }
 
     public Integer getZero() {
@@ -175,4 +141,11 @@ public class ProcessBinaryInputSecond {
         this.numberOfCharacters = 0;
     }
 
+    public ArrayList<String> getOxigenGeneratorRating() {
+        return oxigenGeneratorRating;
+    }
+
+    public ArrayList<String> getCO2ScrubberRating() {
+        return CO2ScrubberRating;
+    }
 }
